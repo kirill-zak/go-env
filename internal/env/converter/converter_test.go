@@ -241,7 +241,7 @@ func Test_strToFloat(t *testing.T) {
 				require.NoError(t, err)
 			}
 
-			require.Equal(t, tt.want, got)
+			require.InDelta(t, tt.want, got, 1e-9)
 		})
 	}
 }

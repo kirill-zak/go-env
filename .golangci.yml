@@ -1,0 +1,138 @@
+version: "2"
+run:
+  concurrency: 4
+  modules-download-mode: readonly
+  issues-exit-code: 1
+  tests: true
+output:
+  formats:
+    text:
+      path: stdout
+      print-linter-name: true
+      print-issued-lines: true
+linters:
+  default: all
+  disable:
+    - canonicalheader
+    - containedctx
+    - contextcheck
+    - cyclop
+    - decorder
+    - depguard
+    - dupword
+    - err113
+    - errchkjson
+    - exhaustive
+    - exhaustruct
+    - forbidigo
+    - funlen
+    - gochecknoglobals
+    - gochecknoinits
+    - goconst
+    - godox
+    - goheader
+    - gomoddirectives
+    - gomodguard
+    - goprintffuncname
+    - grouper
+    - iface
+    - importas
+    - inamedparam
+    - ireturn
+    - lll
+    - makezero
+    - mnd
+    - musttag
+    - nakedret
+    - nlreturn
+    - nonamedreturns
+    - paralleltest
+    - perfsprint
+    - promlinter
+    - recvcheck
+    - rowserrcheck
+    - spancheck
+    - sqlclosecheck
+    - tagliatelle
+    - testableexamples
+    - testpackage
+    - thelper
+    - tparallel
+    - unparam
+    - varnamelen
+    - wastedassign
+    - wrapcheck
+    - wsl
+    - wsl_v5
+    - noinlineerr
+    - revive
+    - godoclint
+    - funcorder
+  settings:
+    dupl:
+      threshold: 200
+    errorlint:
+      errorf-multi: false
+    funlen:
+      lines: 120
+      statements: 60
+    lll:
+      line-length: 140
+    nestif:
+      min-complexity: 6
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - linters:
+          - modernize
+        text: '.*any: interface{} can be replaced by any.*'
+      - linters:
+          - staticcheck
+        text: '.*could remove embedded field .*'
+        path: .go
+      - linters:
+          - forcetypeassert
+          - gocognit
+          - gosec
+          - maintidx
+          - nilnil
+          - noctx
+          - rowserrcheck
+          - unqueryvet
+          - prealloc
+        path: _test\.go
+      - linters:
+          - revive
+          - staticcheck
+        text: ': .* should be [A-Z]'
+      - linters:
+          - errorlint
+        text: type switch on error will fail on wrapped errors
+      - linters:
+          - bodyclose
+        source: .*\.Result().*
+      - linters:
+          - revive
+        text: .*seems to be unused, consider removing or renaming it as _.*
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+issues:
+  max-same-issues: 10
+  uniq-by-line: true
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$

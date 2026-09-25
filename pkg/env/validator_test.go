@@ -7,7 +7,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	envErrors "github.com/kirill-zak/go-env/error"
+	envErrors "github.com/kirill-zak/go-env/errors"
 )
 
 func Test_Validate(t *testing.T) {

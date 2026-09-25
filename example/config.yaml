@@ -1,0 +1,13 @@
+env:
+  check_batch_size:
+    type: int
+    default: 1000
+    description: Check batch size
+  check_interval:
+    type: duration
+    default: "10m"
+    description: Check interval
+  check_schedule:
+    type: string
+    default: "* * 2-6 * * * *"
+    description: Check schedule
