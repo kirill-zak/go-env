@@ -12,7 +12,7 @@ func RootCommand() *cobra.Command {
 		SilenceUsage: true,
 	}
 
-	pkg := cmd.Flags().StringP("package", "p", "appenv", "Generated package name.")
+	pkg := cmd.Flags().StringP("package", "p", "config", "Generated package name.")
 	output := cmd.Flags().StringP("output", "o", "env_gen.go", "Path to write the generated files.")
 	doc := cmd.Flags().StringP("doc", "d", "", "Path to write generated documentation.")
 

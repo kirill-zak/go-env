@@ -24,7 +24,7 @@ func TestDo_GeneratesOutputFile(t *testing.T) {
 	require.NoError(t, os.WriteFile(configPath, []byte(validConfigYAML), 0o600))
 
 	err := do(rootArgs{
-		pkgName: "appenv",
+		pkgName: "config",
 		outName: outPath,
 		files:   []string{configPath},
 	})
@@ -32,7 +32,7 @@ func TestDo_GeneratesOutputFile(t *testing.T) {
 	require.NoError(t, err)
 	data, readErr := os.ReadFile(outPath)
 	require.NoError(t, readErr)
-	assert.Contains(t, string(data), "package appenv")
+	assert.Contains(t, string(data), "package config")
 }
 
 func TestDo_GeneratesDocumentation(t *testing.T) {
@@ -43,7 +43,7 @@ func TestDo_GeneratesDocumentation(t *testing.T) {
 	require.NoError(t, os.WriteFile(configPath, []byte(validConfigYAML), 0o600))
 
 	err := do(rootArgs{
-		pkgName: "appenv",
+		pkgName: "config",
 		outName: outPath,
 		docName: docPath,
 		files:   []string{configPath},
@@ -57,7 +57,7 @@ func TestDo_GeneratesDocumentation(t *testing.T) {
 
 func TestDo_ReturnsErrorForMissingConfig(t *testing.T) {
 	err := do(rootArgs{
-		pkgName: "appenv",
+		pkgName: "config",
 		outName: filepath.Join(t.TempDir(), "gen.go"),
 		files:   []string{filepath.Join(t.TempDir(), "missing.yaml")},
 	})

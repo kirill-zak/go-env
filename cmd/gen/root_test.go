@@ -23,7 +23,7 @@ func TestRootCommand_FlagsDefaults(t *testing.T) {
 
 	pkg, err := cmd.Flags().GetString("package")
 	require.NoError(t, err)
-	assert.Equal(t, "appenv", pkg, "default package name")
+	assert.Equal(t, "config", pkg, "default package name")
 
 	output, err := cmd.Flags().GetString("output")
 	require.NoError(t, err)
