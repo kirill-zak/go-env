@@ -1,11 +1,6 @@
 package entity
 
-import (
-	"fmt"
-	"sort"
-
-	"github.com/kirill-zak/go-env/internal/env/converter"
-)
+import "sort"
 
 // GetterTemplateArgs contains the data needed to render a single getter template.
 type GetterTemplateArgs struct {
@@ -18,25 +13,6 @@ type GetterTemplateArgs struct {
 	EnvNames             []string
 
 	GoType string
-}
-
-// NewGetterTemplateArgs creates new GetterTemplateArgs.
-func NewGetterTemplateArgs(v Variable) (*GetterTemplateArgs, error) {
-	goType, goDefaultVal, err := converter.AsGoType(v.Type, v.Default)
-	if err != nil {
-		return nil, fmt.Errorf("invalid env type: %w", err)
-	}
-
-	return &GetterTemplateArgs{
-		VariableName:         v.Name,
-		VariableType:         v.Type,
-		GoType:               goType,
-		VariableDefaultValue: goDefaultVal,
-		Critical:             v.ValidateCritical,
-		Rules:                v.ValidateRules,
-		EnvNames:             v.EnvNames,
-		VariableDescription:  v.Description,
-	}, nil
 }
 
 // SortGetterTemplateArgs sorts GetterTemplateArgs by VariableName.

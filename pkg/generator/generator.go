@@ -27,10 +27,10 @@ type Generator struct {
 
 // NewGenerator creates a new Generator instance.
 func NewGenerator(
-	logger *slog.Logger,
 	configReader configReader,
 	templateEngine templateEngine,
 	fileWriter fileWriter,
+	logger *slog.Logger,
 ) *Generator {
 	return &Generator{
 		configReader:   configReader,
@@ -93,7 +93,7 @@ func (g *Generator) prepareTemplateArgs(vars []entity.Variable) ([]*entity.Gette
 			continue
 		}
 
-		arg, err := entity.NewGetterTemplateArgs(v)
+		arg, err := newGetterTemplateArgs(v)
 		if err != nil {
 			return nil, fmt.Errorf("create template args for variable %s failed: %w", v.Name, err)
 		}
@@ -127,7 +127,7 @@ func (g *Generator) prepareHTMLArgs(vars []entity.Variable) ([]*entity.HTMLTempl
 	htmlTmplArgs := make([]*entity.HTMLTemplateSection, 0, len(sections))
 
 	for sectionName, sectionVars := range sections {
-		arg, err := entity.NewHTMLTemplateSection(sectionName, sectionVars)
+		arg, err := newHTMLTemplateSection(sectionName, sectionVars)
 		if err != nil {
 			return nil, fmt.Errorf("create html template section %s failed: %w", sectionName, err)
 		}

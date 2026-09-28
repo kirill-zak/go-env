@@ -40,10 +40,10 @@ func makeEnvGenerator(logger *slog.Logger) *goEnvPkgGenerator.Generator {
 	fileWriter := goEnvPkgGenerator.NewFileWriter(logger)
 
 	return goEnvPkgGenerator.NewGenerator(
-		logger,
 		configReader,
 		templateEngine,
 		fileWriter,
+		logger,
 	)
 }
 

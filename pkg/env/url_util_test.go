@@ -8,6 +8,27 @@ import (
 )
 
 func TestGetURL(t *testing.T) {
+	const (
+		validHTTPRawURL  = "http://example.com/path"
+		validHTTPSRawURL = "https://sub.example.org/query?q=test"
+		invalidSchemeURL = "://invalid.scheme"
+		malformedRawURL  = "htts://bad .url"
+	)
+
+	var (
+		expectedHTTP = &url.URL{
+			Scheme: "http",
+			Host:   "example.com",
+			Path:   "/path",
+		}
+		expectedHTTPS = &url.URL{
+			Scheme:   "https",
+			Host:     "sub.example.org",
+			Path:     "/query",
+			RawQuery: "q=test",
+		}
+	)
+
 	type testCase struct {
 		name      string
 		rawURL    string
@@ -17,35 +38,26 @@ func TestGetURL(t *testing.T) {
 
 	testCases := []testCase{
 		{
-			name:   "ValidHTTP",
-			rawURL: "http://example.com/path",
-			expected: &url.URL{
-				Scheme: "http",
-				Host:   "example.com",
-				Path:   "/path",
-			},
+			name:      "ValidHTTP",
+			rawURL:    validHTTPRawURL,
+			expected:  expectedHTTP,
 			expectErr: false,
 		},
 		{
-			name:   "ValidHTTPS",
-			rawURL: "https://sub.example.org/query?q=test",
-			expected: &url.URL{
-				Scheme:   "https",
-				Host:     "sub.example.org",
-				Path:     "/query",
-				RawQuery: "q=test",
-			},
+			name:      "ValidHTTPS",
+			rawURL:    validHTTPSRawURL,
+			expected:  expectedHTTPS,
 			expectErr: false,
 		},
 		{
 			name:      "InvalidScheme",
-			rawURL:    "://invalid.scheme",
+			rawURL:    invalidSchemeURL,
 			expected:  nil,
 			expectErr: true,
 		},
 		{
 			name:      "MalformedURL",
-			rawURL:    "htts://bad .url",
+			rawURL:    malformedRawURL,
 			expected:  nil,
 			expectErr: true,
 		},
@@ -69,6 +81,27 @@ func TestGetURL(t *testing.T) {
 }
 
 func TestGetURLSlice(t *testing.T) {
+	const (
+		multipleValidURL  = "http://example.com"
+		multipleSearchURL = "https://domain.com/search"
+		singleValidURL    = "ftp://localhost/test"
+		invalidRawURL     = "://bad.url"
+		mixedValidURL     = "http://valid.com"
+		mixedInvalidURL   = "htts://bad .url"
+	)
+
+	var (
+		expectedMultiple = []*url.URL{
+			{Scheme: "http", Host: "example.com"},
+			{Scheme: "https", Host: "domain.com", Path: "/search"},
+		}
+		expectedSingle = []*url.URL{
+			{Scheme: "ftp", Host: "localhost", Path: "/test"},
+		}
+		emptyURLs     = []string{}
+		expectedEmpty = []*url.URL{}
+	)
+
 	type testCase struct {
 		name       string
 		rawURLs    []string
@@ -78,38 +111,33 @@ func TestGetURLSlice(t *testing.T) {
 
 	testCases := []testCase{
 		{
-			name:    "MultipleValidURLs",
-			rawURLs: []string{"http://example.com", "https://domain.com/search"},
-			expected: []*url.URL{
-				{Scheme: "http", Host: "example.com"},
-				{Scheme: "https", Host: "domain.com", Path: "/search"},
-			},
+			name:       "MultipleValidURLs",
+			rawURLs:    []string{multipleValidURL, multipleSearchURL},
+			expected:   expectedMultiple,
 			expectPani: false,
 		},
 		{
-			name:    "SingleValidURL",
-			rawURLs: []string{"ftp://localhost/test"},
-			expected: []*url.URL{
-				{Scheme: "ftp", Host: "localhost", Path: "/test"},
-			},
+			name:       "SingleValidURL",
+			rawURLs:    []string{singleValidURL},
+			expected:   expectedSingle,
 			expectPani: false,
 		},
 		{
 			name:       "InvalidURL",
-			rawURLs:    []string{"://bad.url"},
+			rawURLs:    []string{invalidRawURL},
 			expected:   nil,
 			expectPani: true,
 		},
 		{
 			name:       "MixedValidAndInvalid",
-			rawURLs:    []string{"http://valid.com", "htts://bad .url"},
+			rawURLs:    []string{mixedValidURL, mixedInvalidURL},
 			expected:   nil,
 			expectPani: true,
 		},
 		{
 			name:       "EmptyInput",
-			rawURLs:    []string{},
-			expected:   []*url.URL{},
+			rawURLs:    emptyURLs,
+			expected:   expectedEmpty,
 			expectPani: false,
 		},
 	}
