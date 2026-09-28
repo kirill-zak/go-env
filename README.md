@@ -49,7 +49,7 @@ Then make sure your `PATH` includes `$(go env GOPATH)/bin`.
 2. **Add a `go:generate` directive** to a Go file in your package:
 
    ```go
-   //go:generate go run github.com/kirill-zak/go-env/cmd/gen -p=example -o=config_gen.go -d ./docs/config.md config.yaml
+   //go:generate go run github.com/kirill-zak/go-env/cmd/gen@latest -p=example -o=config_gen.go -d ./docs/config.md config.yaml
    ```
 
    Run generation with:
