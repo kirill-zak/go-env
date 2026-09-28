@@ -19,7 +19,7 @@ func TestAsGoType(t *testing.T) {
 		name     string
 		args     args
 		wantResT string
-		wantResV interface{}
+		wantResV any
 		wantErr  bool
 	}{
 		{

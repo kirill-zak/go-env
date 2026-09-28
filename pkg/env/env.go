@@ -6,7 +6,7 @@ import (
 	"strings"
 	"sync"
 
-	envErrors "github.com/kirill-zak/go-env/error"
+	envErrors "github.com/kirill-zak/go-env/errors"
 	"github.com/kirill-zak/go-env/internal/env/converter"
 )
 

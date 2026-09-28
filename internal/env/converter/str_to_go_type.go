@@ -3,7 +3,7 @@ package converter
 import (
 	"net/url"
 
-	envErrors "github.com/kirill-zak/go-env/error"
+	envErrors "github.com/kirill-zak/go-env/errors"
 )
 
 func AsGoType(typ, val string) (resT string, resV any, err error) {
@@ -41,11 +41,18 @@ func AsGoType(typ, val string) (resT string, resV any, err error) {
 		resV, err = strToURLSlice(val)
 
 	default:
-		err = envErrors.ErrInvalidType
+		return "", nil, &envErrors.InvalidTypeError{
+			Name: "unknown",
+			Type: typ,
+		}
 	}
 
 	if err != nil {
-		err = envErrors.ErrInvalidValue
+		return resT, resV, &envErrors.InvalidValueError{
+			Name:  "unknown",
+			Value: val,
+			Type:  typ,
+		}
 	}
 
 	return resT, resV, err

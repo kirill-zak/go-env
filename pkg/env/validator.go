@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	envErrors "github.com/kirill-zak/go-env/error"
+	envErrors "github.com/kirill-zak/go-env/errors"
 )
 
 const (
@@ -50,7 +50,7 @@ func handleValidationError(err error, critical bool, format string, args ...inte
 		panic(msg)
 	}
 
-	return fmt.Errorf("validate: %w", err)
+	return fmt.Errorf("validate failed: %w", err)
 }
 
 func positive[T Rulable](val T) bool {
