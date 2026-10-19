@@ -175,12 +175,12 @@ func TestNewGetterTemplateArgs(t *testing.T) {
 	}
 }
 
-func TestNewHTMLTemplateArgs(t *testing.T) {
+func TestNewMarkdownTemplateArgs(t *testing.T) {
 	sectionName := "Test Section."
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			res, err := newHTMLTemplateSection(sectionName, []entity.Variable{
+			res, err := newMarkdownTemplateSection(sectionName, []entity.Variable{
 				{
 					Name:        varName,
 					Type:        tc.varType,

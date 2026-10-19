@@ -54,7 +54,7 @@ func (fw *FileWriterImpl) WriteOutputFile(fileName, pkgName string, ignoreImport
 }
 
 // WriteDocumentationFile writes the generated documentation file.
-func (fw *FileWriterImpl) WriteDocumentationFile(fileName string, htmlArgs []*entity.HTMLTemplateSection) error {
+func (fw *FileWriterImpl) WriteDocumentationFile(fileName string, mdArgs []*entity.MarkdownTemplateSection) error {
 	file, err := os.Create(fileName)
 	if err != nil {
 		return fmt.Errorf("create doc file %s failed: %w", fileName, err)
@@ -70,9 +70,9 @@ func (fw *FileWriterImpl) WriteDocumentationFile(fileName string, htmlArgs []*en
 		}
 	}()
 
-	err = templating.RenderHTML(file, htmlArgs)
+	err = templating.RenderMarkdown(file, mdArgs)
 	if err != nil {
-		return fmt.Errorf("render html failed: %w", err)
+		return fmt.Errorf("render markdown failed: %w", err)
 	}
 
 	return nil

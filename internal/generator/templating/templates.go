@@ -1,7 +1,6 @@
 package templating
 
 import (
-	htmlTemplate "html/template"
 	"strings"
 	"text/template"
 )
@@ -80,7 +79,9 @@ func Lookup{{ toCamelCase .VariableName }}() ({{ .GoType }}, error) {
 }
 `))
 
-// basicHTMLTemplate is a text template for obtaining single env variable.
+// basicMarkdownTemplate is a Markdown template describing environment variables
+// grouped into sections as tables.
+//
 // Required input fields:
 //
 //	 Name - string
@@ -90,54 +91,25 @@ func Lookup{{ toCamelCase .VariableName }}() ({{ .GoType }}, error) {
 //	    Default - interface{}
 //	    Description - string
 //	    Comment - string.
-var basicHTMLTemplate = htmlTemplate.Must(htmlTemplate.New("").
-	Funcs(htmlTemplate.FuncMap{"prettyValue": prettyValue}).
+var basicMarkdownTemplate = template.Must(template.New("").
+	Funcs(template.FuncMap{
+		"prettyValue":        prettyValue,
+		"code":               code,
+		"formatEnvNames":     formatEnvNames,
+		"formatRules":        formatRules,
+		"escapeMarkdownCell": escapeMarkdownCell,
+	}).
 	Parse(`# Environment Variables
-<table class="env-vars">
-	<tbody>
-		{{- range . }}
-		{{- if ne .Name "" }}
-		<tr>
-			<th class="env-vars-section-name" colspan="5">{{ .Name }}</th>
-		</tr>
-		{{- end }}
-		<tr class="env-vars-section-header">
-			<th>Переменная</th>
-			<th>Тип</th>
-			<th>Ограничения</th>
-			<th>Значение по умолчанию</th>
-			<th>Описание</th>
-		</tr>
-		{{- range .Variables }}
-		<tr>
-			<td>
-				{{- range $i, $e := .EnvNames -}}
-					{{- if ne $i 0 }}<br>{{ end -}}
-					{{- $e -}}
-				{{- end -}}
-			</td>
-			<td><code>{{ .Type }}</code></td>
-			{{- if gt (len .Rules) 0 }}
-			<td>
-				{{ if .Critical }}<b>Строгие:</b><br>{{ else }}<b>Нестрогие:</b><br>{{ end }}
-				{{- range $i, $e := .Rules -}}
-					{{- if ne $i 0 }}<br>{{ end -}}
-					{{- $e -}}
-				{{- end }}
-			</td>
-			{{- else }}
-			<td>—</td>
-			{{- end }}
-			<td><code>{{ .Default | prettyValue }}</code></td>
-			<td>
-				<p>{{ .Description }}</p>
-				{{- if ne .Comment "" }}
-				<p><small>{{ .Comment }}</small></p>
-				{{- end }}
-			</td>
-		</tr>
-		{{- end }}
-		{{- end }}
-	</tbody>
-</table>
+{{- range . }}
+{{- if ne .Name "" }}
+
+## {{ .Name }}
+{{- end }}
+
+| Переменная | Тип | Ограничения | Значение по умолчанию | Описание |
+| --- | --- | --- | --- | --- |
+{{- range .Variables }}
+| {{ formatEnvNames .EnvNames }} | {{ code .Type }} | {{ formatRules .Rules .Critical }} | {{ code (prettyValue .Default) }} | {{ escapeMarkdownCell .Description }}{{ if ne .Comment "" }}<br><small>{{ escapeMarkdownCell .Comment }}</small>{{ end }} |
+{{- end }}
+{{- end }}
 `))

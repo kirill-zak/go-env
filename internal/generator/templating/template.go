@@ -119,3 +119,46 @@ func formatURLSlice(urls []*url.URL) string {
 
 	return strings.Join(strs, ", ")
 }
+
+// code wraps value in Markdown inline code backticks.
+func code(v any) string {
+	return "`" + fmt.Sprint(v) + "`"
+}
+
+// formatEnvNames formats env names as comma separated Markdown inline code
+// entries joined with <br> so they fit into a single table cell.
+func formatEnvNames(names []string) string {
+	strs := make([]string, len(names))
+	for i, name := range names {
+		strs[i] = code(name)
+	}
+
+	return strings.Join(strs, "<br>")
+}
+
+// formatRules formats validation rules as Markdown table cell content.
+// Strictness is reflected in the prefix; empty rules produce a dash.
+func formatRules(rules []string, critical bool) string {
+	if len(rules) == 0 {
+		return "—"
+	}
+
+	prefix := "**Нестрогие:** "
+	if critical {
+		prefix = "**Строгие:** "
+	}
+
+	strs := make([]string, len(rules))
+	for i, rule := range rules {
+		strs[i] = code(rule)
+	}
+
+	return prefix + strings.Join(strs, ", ")
+}
+
+// escapeMarkdownCell escapes characters that would break a Markdown table cell.
+func escapeMarkdownCell(s string) string {
+	s = strings.ReplaceAll(s, "|", `\|`)
+
+	return strings.ReplaceAll(s, "\n", "<br>")
+}

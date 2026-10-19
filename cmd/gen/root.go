@@ -14,7 +14,7 @@ func RootCommand() *cobra.Command {
 
 	pkg := cmd.Flags().StringP("package", "p", "config", "Generated package name.")
 	output := cmd.Flags().StringP("output", "o", "env_gen.go", "Path to write the generated files.")
-	doc := cmd.Flags().StringP("doc", "d", "", "Path to write generated documentation.")
+	doc := cmd.Flags().StringP("doc", "d", "", "Path to write generated Markdown documentation.")
 
 	cmd.RunE = func(_ *cobra.Command, args []string) error {
 		return do(rootArgs{

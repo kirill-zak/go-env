@@ -28,7 +28,7 @@ func (m *mockTemplateEngine) RenderOutput(writer any, pkgName string, files []st
 	return m.renderOutputErr
 }
 
-func (m *mockTemplateEngine) RenderDocumentation(writer any, htmlArgs []*entity.HTMLTemplateSection) error {
+func (m *mockTemplateEngine) RenderDocumentation(writer any, mdArgs []*entity.MarkdownTemplateSection) error {
 	return m.renderOutputErr
 }
 
@@ -46,7 +46,7 @@ func (m *mockFileWriter) WriteOutputFile(
 	return m.writeOutputErr
 }
 
-func (m *mockFileWriter) WriteDocumentationFile(fileName string, htmlArgs []*entity.HTMLTemplateSection) error {
+func (m *mockFileWriter) WriteDocumentationFile(fileName string, mdArgs []*entity.MarkdownTemplateSection) error {
 	m.wroteDoc = true
 	return m.docErr
 }
@@ -59,7 +59,7 @@ func TestGenerator_Generate(t *testing.T) {
 	const (
 		pkgName              = "mypkg"
 		outName              = "out.go"
-		docName              = "doc.html"
+		docName              = "doc.md"
 		configFile           = "config.yaml"
 		errReadConfigMsg     = "read config failed"
 		errGenerateOutputMsg = "generate output file failed"
@@ -197,7 +197,7 @@ func TestGenerator_prepareTemplateArgs(t *testing.T) {
 	}
 }
 
-func TestGenerator_prepareHTMLArgs(t *testing.T) {
+func TestGenerator_prepareMarkdownArgs(t *testing.T) {
 	const (
 		withEnvVarName  = "with_env"
 		noEnvVarName    = "no_env"
@@ -223,12 +223,12 @@ func TestGenerator_prepareHTMLArgs(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			g := newTestGenerator(&mockConfigReader{}, &mockTemplateEngine{}, &mockFileWriter{})
 
-			sections, err := g.prepareHTMLArgs(tt.vars)
+			sections, err := g.prepareMarkdownArgs(tt.vars)
 
 			require.NoError(t, err)
 			require.Len(t, sections, wantSections)
 
-			byName := map[string]*entity.HTMLTemplateSection{}
+			byName := map[string]*entity.MarkdownTemplateSection{}
 			for _, s := range sections {
 				byName[s.Name] = s
 			}
