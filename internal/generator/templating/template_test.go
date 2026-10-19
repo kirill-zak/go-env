@@ -136,9 +136,9 @@ func TestFormatRules(t *testing.T) {
 	}{
 		"no rules":          {rules: nil, want: "—"},
 		"empty rules":       {rules: []string{}, critical: true, want: "—"},
-		"non-critical":      {rules: []string{"positive"}, want: "**Нестрогие:** `positive`"},
-		"critical single":   {rules: []string{"positive"}, critical: true, want: "**Строгие:** `positive`"},
-		"critical multiple": {rules: []string{"positive", "negative"}, critical: true, want: "**Строгие:** `positive`, `negative`"},
+		"non-critical":      {rules: []string{"positive"}, want: "**Non-strict:** `positive`"},
+		"critical single":   {rules: []string{"positive"}, critical: true, want: "**Strict:** `positive`"},
+		"critical multiple": {rules: []string{"positive", "negative"}, critical: true, want: "**Strict:** `positive`, `negative`"},
 	}
 
 	for name, tc := range testCases {

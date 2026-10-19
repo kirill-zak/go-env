@@ -143,9 +143,9 @@ func formatRules(rules []string, critical bool) string {
 		return "—"
 	}
 
-	prefix := "**Нестрогие:** "
+	prefix := "**Non-strict:** "
 	if critical {
-		prefix = "**Строгие:** "
+		prefix = "**Strict:** "
 	}
 
 	strs := make([]string, len(rules))

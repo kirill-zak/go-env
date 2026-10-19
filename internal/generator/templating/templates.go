@@ -106,7 +106,7 @@ var basicMarkdownTemplate = template.Must(template.New("").
 ## {{ .Name }}
 {{- end }}
 
-| Переменная | Тип | Ограничения | Значение по умолчанию | Описание |
+| Env variable | Type | Constraints | Default value | Description |
 | --- | --- | --- | --- | --- |
 {{- range .Variables }}
 | {{ formatEnvNames .EnvNames }} | {{ code .Type }} | {{ formatRules .Rules .Critical }} | {{ code (prettyValue .Default) }} | {{ escapeMarkdownCell .Description }}{{ if ne .Comment "" }}<br><small>{{ escapeMarkdownCell .Comment }}</small>{{ end }} |

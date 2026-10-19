@@ -47,10 +47,10 @@ func TestRenderMarkdown_WritesDocumentation(t *testing.T) {
 	out := buf.String()
 	assert.Contains(t, out, "# Environment Variables")
 	assert.Contains(t, out, "## section 2")
-	assert.Contains(t, out, "| Переменная | Тип | Ограничения | Значение по умолчанию | Описание |")
+	assert.Contains(t, out, "| Env variable | Type | Constraints | Default value | Description |")
 	assert.Contains(t, out, "`VAR1`")
 	assert.Contains(t, out, "`int`")
-	assert.Contains(t, out, "**Строгие:** `positive`")
+	assert.Contains(t, out, "**Strict:** `positive`")
 	assert.Contains(t, out, "var 1")
 	assert.Contains(t, out, "`VAR2`<br>`VAR2_ALIAS`")
 	assert.NotContains(t, out, "<table")
@@ -138,7 +138,7 @@ func TestRenderMarkdown_NonCriticalRulesAndComment(t *testing.T) {
 	require.NoError(t, RenderMarkdown(buf, sections))
 
 	out := buf.String()
-	assert.Contains(t, out, "**Нестрогие:** `positive`, `negative`")
+	assert.Contains(t, out, "**Non-strict:** `positive`, `negative`")
 	assert.Contains(t, out, "desc<br><small>note</small>")
 }
 
