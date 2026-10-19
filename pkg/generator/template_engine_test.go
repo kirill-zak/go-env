@@ -65,13 +65,13 @@ func TestTemplateEngineImpl_RenderDocumentation(t *testing.T) {
 		docEnvName  = "CHECK_BATCH_SIZE"
 	)
 
-	newArgs := []*entity.HTMLTemplateSection{
-		{Name: sectionName, Variables: []entity.HTMLTemplateVariable{{EnvNames: []string{docEnvName}}}},
+	newArgs := []*entity.MarkdownTemplateSection{
+		{Name: sectionName, Variables: []entity.MarkdownTemplateVariable{{EnvNames: []string{docEnvName}}}},
 	}
 
 	tests := []struct {
 		name  string
-		args  []*entity.HTMLTemplateSection
+		args  []*entity.MarkdownTemplateSection
 		setup func(t *testing.T) (any, func(t *testing.T))
 	}{
 		{
@@ -82,6 +82,8 @@ func TestTemplateEngineImpl_RenderDocumentation(t *testing.T) {
 				return buf, func(t *testing.T) {
 					t.Helper()
 					assert.NotEmpty(t, buf.String())
+					assert.Contains(t, buf.String(), "# Environment Variables")
+					assert.Contains(t, buf.String(), "`"+docEnvName+"`")
 				}
 			},
 		},

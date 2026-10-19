@@ -73,14 +73,14 @@ func (g *Generator) generateOutputFile(args entity.GeneratorArgs, vars []entity.
 	return g.fileWriter.WriteOutputFile(args.OutName, args.PkgName, args.IgnoreImports, tmplArgs)
 }
 
-// generateDocumentation generates HTML documentation.
+// generateDocumentation generates Markdown documentation.
 func (g *Generator) generateDocumentation(args entity.GeneratorArgs, vars []entity.Variable) error {
-	htmlArgs, err := g.prepareHTMLArgs(vars)
+	mdArgs, err := g.prepareMarkdownArgs(vars)
 	if err != nil {
-		return fmt.Errorf("prepare html args failed: %w", err)
+		return fmt.Errorf("prepare markdown args failed: %w", err)
 	}
 
-	return g.fileWriter.WriteDocumentationFile(args.DocName, htmlArgs)
+	return g.fileWriter.WriteDocumentationFile(args.DocName, mdArgs)
 }
 
 // prepareTemplateArgs prepares template arguments for Go code generation.
@@ -108,8 +108,8 @@ func (g *Generator) prepareTemplateArgs(vars []entity.Variable) ([]*entity.Gette
 	return tmplArgs, nil
 }
 
-// prepareHTMLArgs prepares template arguments for HTML documentation generation.
-func (g *Generator) prepareHTMLArgs(vars []entity.Variable) ([]*entity.HTMLTemplateSection, error) {
+// prepareMarkdownArgs prepares template arguments for Markdown documentation generation.
+func (g *Generator) prepareMarkdownArgs(vars []entity.Variable) ([]*entity.MarkdownTemplateSection, error) {
 	// Group variables by sections
 	sections := make(map[string][]entity.Variable)
 
@@ -124,15 +124,15 @@ func (g *Generator) prepareHTMLArgs(vars []entity.Variable) ([]*entity.HTMLTempl
 	}
 
 	// Convert to template args
-	htmlTmplArgs := make([]*entity.HTMLTemplateSection, 0, len(sections))
+	mdTmplArgs := make([]*entity.MarkdownTemplateSection, 0, len(sections))
 
 	for sectionName, sectionVars := range sections {
-		arg, err := newHTMLTemplateSection(sectionName, sectionVars)
+		arg, err := newMarkdownTemplateSection(sectionName, sectionVars)
 		if err != nil {
-			return nil, fmt.Errorf("create html template section %s failed: %w", sectionName, err)
+			return nil, fmt.Errorf("create markdown template section %s failed: %w", sectionName, err)
 		}
-		htmlTmplArgs = append(htmlTmplArgs, arg)
+		mdTmplArgs = append(mdTmplArgs, arg)
 	}
 
-	return htmlTmplArgs, nil
+	return mdTmplArgs, nil
 }

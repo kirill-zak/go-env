@@ -86,7 +86,7 @@ envgen [flags] [file or glob pattern]
 |------|-----------|--------------|-----------------------------------------------|
 | `--package` | `-p` | `config` | Generated package name.                        |
 | `--output`  | `-o` | `env_gen.go` | Path to write the generated getter file.       |
-| `--doc`     | `-d` | *(empty)*     | Path to write generated documentation; empty disables it. |
+| `--doc`     | `-d` | *(empty)*     | Path to write a generated Markdown reference; empty disables it. |
 
 The positional argument accepts one or more config files or a glob pattern.
 

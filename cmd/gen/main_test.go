@@ -39,7 +39,7 @@ func TestDo_GeneratesDocumentation(t *testing.T) {
 	dir := t.TempDir()
 	configPath := filepath.Join(dir, "config.yaml")
 	outPath := filepath.Join(dir, "gen.go")
-	docPath := filepath.Join(dir, "gen.html")
+	docPath := filepath.Join(dir, "gen.md")
 	require.NoError(t, os.WriteFile(configPath, []byte(validConfigYAML), 0o600))
 
 	err := do(rootArgs{
@@ -52,7 +52,9 @@ func TestDo_GeneratesDocumentation(t *testing.T) {
 	require.NoError(t, err)
 	docData, readErr := os.ReadFile(docPath)
 	require.NoError(t, readErr)
-	assert.NotEmpty(t, docData)
+	assert.Contains(t, string(docData), "# Environment Variables")
+	assert.Contains(t, string(docData), "`CHECK_BATCH_SIZE`")
+	assert.NotContains(t, string(docData), "<table")
 }
 
 func TestDo_ReturnsErrorForMissingConfig(t *testing.T) {
@@ -75,7 +77,7 @@ func TestMakeGeneratorArgs_MapsFields(t *testing.T) {
 	args := rootArgs{
 		pkgName: "custompkg",
 		outName: "out.go",
-		docName: "doc.html",
+		docName: "doc.md",
 		files:   []string{"a.yaml", "b.yaml"},
 	}
 
@@ -83,6 +85,6 @@ func TestMakeGeneratorArgs_MapsFields(t *testing.T) {
 
 	assert.Equal(t, "custompkg", genArgs.PkgName)
 	assert.Equal(t, "out.go", genArgs.OutName)
-	assert.Equal(t, "doc.html", genArgs.DocName)
+	assert.Equal(t, "doc.md", genArgs.DocName)
 	assert.Equal(t, []string{"a.yaml", "b.yaml"}, genArgs.Files)
 }

@@ -23,10 +23,10 @@ func (te *TemplateEngineImpl) RenderOutput(writer any, pkgName string, files []s
 	return nil
 }
 
-// RenderDocumentation renders the HTML documentation template.
-func (te *TemplateEngineImpl) RenderDocumentation(writer any, htmlArgs []*entity.HTMLTemplateSection) error {
+// RenderDocumentation renders the Markdown documentation template.
+func (te *TemplateEngineImpl) RenderDocumentation(writer any, mdArgs []*entity.MarkdownTemplateSection) error {
 	if w, ok := writer.(io.Writer); ok {
-		return templating.RenderHTML(w, htmlArgs)
+		return templating.RenderMarkdown(w, mdArgs)
 	}
 	return nil
 }

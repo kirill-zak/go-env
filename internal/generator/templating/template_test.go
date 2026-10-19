@@ -92,6 +92,81 @@ func TestFormatURLSlice(t *testing.T) {
 	assert.Empty(t, formatURLSlice(nil))
 }
 
+func TestCode(t *testing.T) {
+	testCases := map[string]struct {
+		val  any
+		want string
+	}{
+		"string":     {val: "int", want: "`int`"},
+		"text":       {val: "10m0s", want: "`10m0s`"},
+		"empty":      {val: "", want: "``"},
+		"number":     {val: 42, want: "`42`"},
+		"with quote": {val: `a"b`, want: "`a\"b`"},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			assert.Equal(t, tc.want, code(tc.val))
+		})
+	}
+}
+
+func TestFormatEnvNames(t *testing.T) {
+	testCases := map[string]struct {
+		names []string
+		want  string
+	}{
+		"single":   {names: []string{"VAR1"}, want: "`VAR1`"},
+		"multiple": {names: []string{"VAR1", "VAR2"}, want: "`VAR1`<br>`VAR2`"},
+		"empty":    {names: nil, want: ""},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			assert.Equal(t, tc.want, formatEnvNames(tc.names))
+		})
+	}
+}
+
+func TestFormatRules(t *testing.T) {
+	testCases := map[string]struct {
+		rules    []string
+		critical bool
+		want     string
+	}{
+		"no rules":          {rules: nil, want: "—"},
+		"empty rules":       {rules: []string{}, critical: true, want: "—"},
+		"non-critical":      {rules: []string{"positive"}, want: "**Non-strict:** `positive`"},
+		"critical single":   {rules: []string{"positive"}, critical: true, want: "**Strict:** `positive`"},
+		"critical multiple": {rules: []string{"positive", "negative"}, critical: true, want: "**Strict:** `positive`, `negative`"},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			assert.Equal(t, tc.want, formatRules(tc.rules, tc.critical))
+		})
+	}
+}
+
+func TestEscapeMarkdownCell(t *testing.T) {
+	testCases := map[string]struct {
+		in   string
+		want string
+	}{
+		"unchanged":        {in: "plain text", want: "plain text"},
+		"single pipe":      {in: "a|b", want: `a\|b`},
+		"newline":          {in: "line1\nline2", want: "line1<br>line2"},
+		"pipe and newline": {in: "a|b\nc", want: `a\|b<br>c`},
+		"multiple pipes":   {in: "a|b|c", want: `a\|b\|c`},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			assert.Equal(t, tc.want, escapeMarkdownCell(tc.in))
+		})
+	}
+}
+
 func mustParseURL(t *testing.T, raw string) *url.URL {
 	t.Helper()
 	u, err := url.Parse(raw)

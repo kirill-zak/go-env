@@ -26,15 +26,15 @@ func newGetterTemplateArgs(v entity.Variable) (*entity.GetterTemplateArgs, error
 	}, nil
 }
 
-// newHTMLTemplateSection converts variables into an HTML template section.
-func newHTMLTemplateSection(name string, vars []entity.Variable) (*entity.HTMLTemplateSection, error) {
-	argVars := make([]entity.HTMLTemplateVariable, len(vars))
+// newMarkdownTemplateSection converts variables into a Markdown template section.
+func newMarkdownTemplateSection(name string, vars []entity.Variable) (*entity.MarkdownTemplateSection, error) {
+	argVars := make([]entity.MarkdownTemplateVariable, len(vars))
 	for i, v := range vars {
 		goType, goDefaultVal, err := converter.AsGoType(v.Type, v.Default)
 		if err != nil {
 			return nil, fmt.Errorf("invalid env type failed: %w", err)
 		}
-		argVars[i] = entity.HTMLTemplateVariable{
+		argVars[i] = entity.MarkdownTemplateVariable{
 			EnvNames:    v.EnvNames,
 			Type:        goType,
 			Default:     goDefaultVal,
@@ -45,7 +45,7 @@ func newHTMLTemplateSection(name string, vars []entity.Variable) (*entity.HTMLTe
 		}
 	}
 
-	return &entity.HTMLTemplateSection{
+	return &entity.MarkdownTemplateSection{
 		Name:      name,
 		Variables: argVars,
 	}, nil

@@ -68,20 +68,20 @@ func TestFileWriterImpl_WriteDocumentationFile(t *testing.T) {
 	tests := []struct {
 		name            string
 		docPath         string
-		sections        []*entity.HTMLTemplateSection
+		sections        []*entity.MarkdownTemplateSection
 		wantErr         bool
 		wantErrContains string
 	}{
 		{
 			name:    "writes a non-empty documentation file",
-			docPath: filepath.Join(t.TempDir(), "docs.html"),
-			sections: []*entity.HTMLTemplateSection{
-				{Name: "General", Variables: []entity.HTMLTemplateVariable{{Type: "int", EnvNames: []string{"CHECK_BATCH_SIZE"}}}},
+			docPath: filepath.Join(t.TempDir(), "docs.md"),
+			sections: []*entity.MarkdownTemplateSection{
+				{Name: "General", Variables: []entity.MarkdownTemplateVariable{{Type: "int", EnvNames: []string{"CHECK_BATCH_SIZE"}}}},
 			},
 		},
 		{
 			name:            "returns error for invalid documentation path",
-			docPath:         filepath.Join(t.TempDir(), "missing", "docs.html"),
+			docPath:         filepath.Join(t.TempDir(), "missing", "docs.md"),
 			wantErr:         true,
 			wantErrContains: errCreateDocFileMsg,
 		},
@@ -98,6 +98,10 @@ func TestFileWriterImpl_WriteDocumentationFile(t *testing.T) {
 			} else {
 				require.NoError(t, err)
 				assertFileNonEmpty(t, tt.docPath)
+
+				data, readErr := os.ReadFile(tt.docPath)
+				require.NoError(t, readErr)
+				assert.Contains(t, string(data), "# Environment Variables")
 			}
 		})
 	}
